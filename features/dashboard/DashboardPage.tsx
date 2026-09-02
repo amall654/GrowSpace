@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { dashboardCopy, type Language } from "../../app/i18n";
-import { supabase } from "../../lib/supabase/client";
+import { getSupabaseBrowserClient } from "../../lib/supabase/browser";
 import { initialBooks, initialCourses, initialProfile, initialSchedule, initialTasks, storageKey } from "./data";
 import type { Book, BookStatus, ClassEvent, Course, Priority, Profile, Tab, Task } from "./types";
 
@@ -30,10 +30,12 @@ export default function DashboardPage() {
   const [focusMessage, setFocusMessage] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const supabase = getSupabaseBrowserClient();
   const t = dashboardCopy[language];
   const logoSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/brand/growspace-logo.png`;
 
   useEffect(() => {
+    if (!supabase) { setIsCheckingSession(false); return; }
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) router.replace("/login");
       if (data.session) {
@@ -48,17 +50,17 @@ export default function DashboardPage() {
         ]);
         if (profileResult.data) setProfile({ name: profileResult.data.name, weeklyGoal: profileResult.data.weekly_goal });
         else await supabase.from("profiles").upsert({ id, name: initialProfile.name, weekly_goal: initialProfile.weeklyGoal });
-        if (coursesResult.data?.length) setCourses(coursesResult.data.map((course) => ({ id: course.id, name: course.name, code: course.code, color: course.color })));
-        if (tasksResult.data?.length) setTasks(tasksResult.data.map((task) => ({ id: task.id, title: task.title, course: task.course, due: task.due, priority: task.priority as Priority, done: task.done })));
-        if (eventsResult.data?.length) setEvents(eventsResult.data.map((event) => ({ id: event.id, title: event.title, course: event.course, day: event.day, time: event.time.slice(0, 5), kind: event.kind as ClassEvent["kind"] })));
-        if (booksResult.data?.length) setBooks(booksResult.data.map((book) => ({ id: book.id, title: book.title, author: book.author, progress: book.progress, status: book.status as BookStatus, note: book.note })));
+        setCourses((coursesResult.data ?? []).map((course) => ({ id: course.id, name: course.name, code: course.code, color: course.color })));
+        setTasks((tasksResult.data ?? []).map((task) => ({ id: task.id, title: task.title, course: task.course, due: task.due, priority: task.priority as Priority, done: task.done })));
+        setEvents((eventsResult.data ?? []).map((event) => ({ id: event.id, title: event.title, course: event.course, day: event.day, time: event.time.slice(0, 5), kind: event.kind as ClassEvent["kind"] })));
+        setBooks((booksResult.data ?? []).map((book) => ({ id: book.id, title: book.title, author: book.author, progress: book.progress, status: book.status as BookStatus, note: book.note })));
       }
       setIsCheckingSession(false);
     });
-  }, [router]);
+  }, [router, supabase]);
 
   useEffect(() => {
-    const stored = localStorage.getItem(storageKey);
+    const stored = supabase ? null : localStorage.getItem(storageKey);
     const storedLanguage = sessionStorage.getItem("growspace-language");
     if (storedLanguage === "ar" || storedLanguage === "en") setLanguage(storedLanguage);
     if (!stored) return;
@@ -68,7 +70,7 @@ export default function DashboardPage() {
       if (parsed.courses) setCourses(parsed.courses);
       if (parsed.profile) setProfile(parsed.profile);
     } catch { localStorage.removeItem(storageKey); }
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -76,7 +78,7 @@ export default function DashboardPage() {
     sessionStorage.setItem("growspace-language", language);
   }, [language]);
 
-  useEffect(() => { localStorage.setItem(storageKey, JSON.stringify({ tasks, events, books, courses, profile })); }, [tasks, events, books, courses, profile]);
+  useEffect(() => { if (!supabase) localStorage.setItem(storageKey, JSON.stringify({ tasks, events, books, courses, profile })); }, [tasks, events, books, courses, profile, supabase]);
 
   const completedCount = tasks.filter((task) => task.done).length;
   const pendingTasks = tasks.filter((task) => !task.done);
@@ -85,40 +87,40 @@ export default function DashboardPage() {
   const languageDayMap: Record<string, string> = { Sunday: t.days[0], Monday: t.days[1], Tuesday: t.days[2], Wednesday: t.days[3], Thursday: t.days[4] };
 
   function switchLanguage() { setLanguage(language === "ar" ? "en" : "ar"); }
-  function toggleTask(id: string) { setTasks((current) => current.map((task) => { if (task.id !== id) return task; const updated = { ...task, done: !task.done }; if (userId) void supabase.from("tasks").update({ done: updated.done }).eq("id", id).eq("user_id", userId); return updated; })); }
-  function removeTask(id: string) { setTasks((current) => current.filter((task) => task.id !== id)); if (userId) void supabase.from("tasks").delete().eq("id", id).eq("user_id", userId); }
+  function toggleTask(id: string) { setTasks((current) => current.map((task) => { if (task.id !== id) return task; const updated = { ...task, done: !task.done }; if (userId && supabase) void supabase.from("tasks").update({ done: updated.done }).eq("id", id).eq("user_id", userId); return updated; })); }
+  function removeTask(id: string) { setTasks((current) => current.filter((task) => task.id !== id)); if (userId && supabase) void supabase.from("tasks").delete().eq("id", id).eq("user_id", userId); }
   function resetData() { setTasks(initialTasks); setEvents(initialSchedule); setBooks(initialBooks); setCourses(initialCourses); setProfile(initialProfile); }
 
   function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget);
     const title = String(form.get("title") || "").trim(); if (!title) return;
     const task = { id: crypto.randomUUID(), title, course: String(form.get("course") || "").trim(), due: String(form.get("due") || new Date().toISOString().slice(0, 10)), priority: String(form.get("priority")) as Priority, done: false };
-    setTasks((current) => [task, ...current]); if (userId) void supabase.from("tasks").insert({ ...task, user_id: userId });
+    setTasks((current) => [task, ...current]); if (userId && supabase) void supabase.from("tasks").insert({ ...task, user_id: userId });
     setShowTaskForm(false); event.currentTarget.reset();
   }
   function addEvent(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget); const title = String(form.get("title") || "").trim(); if (!title) return;
     const item = { id: crypto.randomUUID(), title, course: String(form.get("course") || "").trim(), day: String(form.get("day")), time: String(form.get("time") || "09:00"), kind: String(form.get("kind")) as ClassEvent["kind"] };
-    setEvents((current) => [...current, item]); if (userId) void supabase.from("events").insert({ ...item, user_id: userId });
+    setEvents((current) => [...current, item]); if (userId && supabase) void supabase.from("events").insert({ ...item, user_id: userId });
     setShowEventForm(false); event.currentTarget.reset();
   }
   function addBook(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget); const title = String(form.get("title") || "").trim(); if (!title) return;
     const item = { id: crypto.randomUUID(), title, author: String(form.get("author") || "").trim(), status: String(form.get("status")) as BookStatus, progress: Number(form.get("progress") || 0), note: String(form.get("note") || "").trim() };
-    setBooks((current) => [...current, item]); if (userId) void supabase.from("books").insert({ ...item, user_id: userId });
+    setBooks((current) => [...current, item]); if (userId && supabase) void supabase.from("books").insert({ ...item, user_id: userId });
     setShowBookForm(false); event.currentTarget.reset();
   }
   function addCourse(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget); const name = String(form.get("name") || "").trim(); if (!name) return;
     const item = { id: crypto.randomUUID(), name, code: String(form.get("code") || "").trim(), color: "bg-sky-100 text-sky-700" };
-    setCourses((current) => [...current, item]); if (userId) void supabase.from("courses").insert({ ...item, user_id: userId });
+    setCourses((current) => [...current, item]); if (userId && supabase) void supabase.from("courses").insert({ ...item, user_id: userId });
     setShowCourseForm(false); event.currentTarget.reset();
   }
   function updateProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget); const name = String(form.get("name") || "").trim();
-    if (name) { const updated = { name, weeklyGoal: Math.max(1, Number(form.get("weeklyGoal") || initialProfile.weeklyGoal)) }; setProfile(updated); if (userId) void supabase.from("profiles").upsert({ id: userId, name: updated.name, weekly_goal: updated.weeklyGoal }); } setShowProfileForm(false);
+    if (name) { const updated = { name, weeklyGoal: Math.max(1, Number(form.get("weeklyGoal") || initialProfile.weeklyGoal)) }; setProfile(updated); if (userId && supabase) void supabase.from("profiles").upsert({ id: userId, name: updated.name, weekly_goal: updated.weeklyGoal }); } setShowProfileForm(false);
   }
-  function updateBook(id: string, progress: number) { setBooks((current) => current.map((book) => { if (book.id !== id) return book; const updated = { ...book, progress: Math.max(0, Math.min(100, progress)), status: progress >= 100 ? "finished" as BookStatus : book.status }; if (userId) void supabase.from("books").update({ progress: updated.progress, status: updated.status }).eq("id", id).eq("user_id", userId); return updated; })); }
+  function updateBook(id: string, progress: number) { setBooks((current) => current.map((book) => { if (book.id !== id) return book; const updated = { ...book, progress: Math.max(0, Math.min(100, progress)), status: progress >= 100 ? "finished" as BookStatus : book.status }; if (userId && supabase) void supabase.from("books").update({ progress: updated.progress, status: updated.status }).eq("id", id).eq("user_id", userId); return updated; })); }
 
   const nav: Array<[Tab, string, string]> = [["overview", "▦", t.dashboard], ["tasks", "✓", t.tasks], ["schedule", "◷", t.schedule], ["library", "⌁", t.library], ["courses", "▤", t.courses], ["reminders", "◷", t.reminders]];
 
@@ -143,7 +145,7 @@ export default function DashboardPage() {
         {tab === "courses" && <CoursesPanel t={t} courses={courses} onAdd={() => setShowCourseForm(true)} />}
         {tab === "reminders" && <RemindersPanel t={t} tasks={reminders} language={language} />}
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-orange-100 pt-5 text-xs text-slate-500"><span>{t.resetHint}</span><button onClick={resetData} className="font-bold text-orange-600 hover:underline">{t.reset}</button></div>
+        {!userId && <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-orange-100 pt-5 text-xs text-slate-500"><span>{t.resetHint}</span><button onClick={resetData} className="font-bold text-orange-600 hover:underline">{t.reset}</button></div>}
       </section>
     </div>
     {showTaskForm && <Modal title={t.quickAdd} onClose={() => setShowTaskForm(false)}><form onSubmit={addTask} className="space-y-4"><Field name="title" label={t.taskTitle} required /><Select name="course" label={t.course} options={[["", t.noCourse], ...courses.map((course) => [course.name, course.name] as [string, string])]} /><div className="grid gap-4 sm:grid-cols-2"><Field name="due" label={t.due} type="date" defaultValue={new Date().toISOString().slice(0, 10)} /><Select name="priority" label={t.priority} options={[["high", t.high], ["medium", t.medium], ["low", t.low]]} /></div><Submit label={t.add} cancel={t.cancel} onCancel={() => setShowTaskForm(false)} /></form></Modal>}

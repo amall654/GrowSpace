@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { authCopy, type Language } from "../../app/i18n";
-import { supabase } from "../../lib/supabase/client";
+import { getSupabaseBrowserClient } from "../../lib/supabase/browser";
 
 export default function AuthPage() {
   const [language, setLanguage] = useState<Language>("ar");
@@ -21,6 +21,8 @@ export default function AuthPage() {
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email") || "").trim();
     const password = String(form.get("password") || "");
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) { setMessage("error"); return; }
     const result = isSignUp ? await supabase.auth.signUp({ email, password }) : await supabase.auth.signInWithPassword({ email, password });
     if (result.error) { setMessage("error"); return; }
     if (isSignUp && !result.data.session) { setMessage("success"); return; }
