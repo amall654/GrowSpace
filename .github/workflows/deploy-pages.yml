@@ -37,6 +37,10 @@ jobs:
 
       - name: Build static site
         run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          GITHUB_ACTIONS: "true"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
