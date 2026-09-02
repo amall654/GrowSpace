@@ -1,5 +1,6 @@
 export type Tab = "overview" | "tasks" | "schedule" | "library" | "courses" | "reminders";
 export type Priority = "high" | "medium" | "low";
+export type TaskFilter = "all" | "open" | "done";
 export type Task = { id: string; title: string; course: string; due: string; priority: Priority; done: boolean };
 export type ClassEvent = { id: string; title: string; course: string; day: string; time: string; kind: "class" | "exam" };
 export type BookStatus = "reading" | "planned" | "finished";

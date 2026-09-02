@@ -45,7 +45,7 @@ export default function Home() {
         </nav>
         <div className="flex items-center gap-3">
           <button onClick={switchLanguage} className="rounded-full border border-orange-200 bg-white px-3 py-2 text-xs font-bold text-orange-600 transition hover:bg-orange-50" aria-label="Change language">{t.language}</button>
-          <Link href="/login" className="hidden rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-orange-600 sm:block">{t.join}</Link>
+          <Link href="/demo" className="hidden rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-orange-600 sm:block">{language === "ar" ? "جرّب المنصة" : "Try the platform"}</Link>
         </div>
       </header>
 
@@ -55,7 +55,7 @@ export default function Home() {
           <h1 className="max-w-xl text-4xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">{t.title}</h1>
           <p className="mt-6 max-w-lg text-lg leading-8 text-slate-600">{t.lead}</p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link href="/login" className="rounded-full bg-orange-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600">{t.join}</Link>
+            <Link href="/demo" className="rounded-full bg-orange-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600">{language === "ar" ? "جرّب المنصة الآن" : "Try the platform now"}</Link><Link href="/login" className="text-sm font-bold text-orange-600 hover:text-orange-700">{t.join}</Link>
             <span className="text-sm font-medium text-slate-500">{t.heroNote}</span>
           </div>
         </div>
