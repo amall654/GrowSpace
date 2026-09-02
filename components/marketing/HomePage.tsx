@@ -87,7 +87,7 @@ export default function Home() {
 
       <section id="waitlist" className="px-6 py-20 lg:px-8"><div className="mx-auto max-w-3xl rounded-[2rem] bg-slate-900 px-7 py-12 text-center text-white sm:px-12"><p className="text-sm font-bold text-orange-300">GrowSpace</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">{t.waitTitle}</h2><p className="mx-auto mt-4 max-w-xl text-slate-300">{t.waitLead}</p><form onSubmit={submitWaitlist} noValidate className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row"><label className="sr-only" htmlFor="email">{t.email}</label><input id="email" type="email" value={email} onChange={(event) => { setEmail(event.target.value); setFeedback(""); }} placeholder={t.email} className="min-w-0 flex-1 rounded-full border border-white/15 bg-white px-5 py-3.5 text-slate-900 outline-none ring-orange-400 focus:ring-2" /><button className="rounded-full bg-orange-500 px-6 py-3.5 font-bold text-white transition hover:bg-orange-600" type="submit">{t.submit}</button></form>{feedback && <p className={`mt-4 text-sm font-bold ${feedback === "success" ? "text-emerald-300" : "text-orange-300"}`} role="status">{feedback === "success" ? t.success : t.invalid}</p>}</div></section>
 
-      <footer className="border-t border-orange-100 px-6 py-7 text-center text-sm font-medium text-slate-500">{t.footer}</footer>
+      <footer className="border-t border-orange-100 px-6 py-7 text-center text-sm font-medium text-slate-500"><p>{t.footer}</p><div className="mt-3 flex justify-center gap-5 text-xs font-bold text-orange-600"><Link href="/privacy">{language === "ar" ? "سياسة الخصوصية" : "Privacy policy"}</Link><Link href="/terms">{language === "ar" ? "شروط الاستخدام" : "Terms of use"}</Link></div></footer>
     </main>
   );
 }
