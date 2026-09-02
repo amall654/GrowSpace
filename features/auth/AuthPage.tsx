@@ -48,8 +48,8 @@ export default function AuthPage() {
       <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_50px_-28px_rgba(15,23,42,0.32)]">
         <div className="border-b border-slate-100 px-7 pb-6 pt-8 sm:px-9">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-600">{isSignUp ? (isArabic ? "إنشاء حساب" : "CREATE ACCOUNT") : (isArabic ? "تسجيل الدخول" : "SIGN IN")}</p>
-          <h1 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">{isSignUp ? (isArabic ? "ابدئي مساحتك الدراسية" : "Create your study space") : (isArabic ? "مرحبًا بعودتك" : "Welcome back")}</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-500">{isSignUp ? t.lead : (isArabic ? "سجّلي دخولك لمتابعة خطتك ومهامك الدراسية." : "Sign in to continue with your study plan and tasks.")}</p>
+          <h1 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">{isSignUp ? (isArabic ? "ابدأ مساحتك الدراسية" : "Create your study space") : (isArabic ? "مرحبًا بعودتك" : "Welcome back")}</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-500">{isSignUp ? t.lead : (isArabic ? "سجّل دخولك لمتابعة خطتك ومهامك الدراسية." : "Sign in to continue with your study plan and tasks.")}</p>
         </div>
 
         <form onSubmit={submit} className="space-y-5 px-7 py-7 sm:px-9">
