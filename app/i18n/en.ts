@@ -49,7 +49,7 @@ export const dashboardEn: DashboardCopy = {
   scheduleTitle: "Academic schedule", addEvent: "Add event", eventTitle: "Event title", day: "Day", time: "Time", type: "Type", lecture: "Lecture", exam: "Exam or review", noEvents: "You have not added any events yet.",
   libraryTitle: "My library", addBook: "Add a book", bookTitle: "Book title", author: "Author", status: "Status", progress: "Progress", note: "Notes or summary", reading: "Reading now", planned: "Want to read", finished: "Finished", noBooks: "Your library is empty right now.",
   save: "Save", change: "Edit", reset: "Reset demo data", resetHint: "Your data is stored in this browser only.", goal: "Weekly goal", goalText: "Complete 5 study tasks", tasksUnit: "tasks", days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
-  courses: "Courses", addCourse: "Add a course", courseName: "Course name", courseCode: "Course code", noCourses: "You have not added any courses yet.", profile: "Profile", name: "Name", editProfile: "Edit profile", weeklyProgress: "Weekly progress", weeklyGoal: "Weekly goal", reminders: "Reminders", dueSoon: "Coming up", noReminders: "No upcoming reminders.", noCourse: "No course",
+  courses: "Courses", addCourse: "Add a course", courseName: "Course name", courseCode: "Course code", noCourses: "You have not added any courses yet.", profile: "Profile", name: "Name", editProfile: "Edit profile", weeklyProgress: "Weekly progress", weeklyGoal: "Weekly goal", reminders: "Reminders", dueSoon: "Coming up", noReminders: "No upcoming reminders.", noCourse: "No course", signOut: "Sign out",
 };
 
 export const authEn: AuthCopy = {
