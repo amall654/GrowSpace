@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { authCopy, type Language } from "../../app/i18n";
 import { getSupabaseBrowserClient } from "../../lib/supabase/browser";
 
 export default function AuthPage() {
+  const router = useRouter();
   const [language, setLanguage] = useState<Language>("ar");
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState<"" | "success" | "error">("");
@@ -31,7 +33,7 @@ export default function AuthPage() {
       : await supabase.auth.signInWithPassword({ email, password });
     if (result.error) { setMessage("error"); return; }
     if (isSignUp && !result.data.session) { setMessage("success"); return; }
-    window.location.assign("/dashboard");
+    router.replace("/dashboard");
   }
 
   return <main dir={isArabic ? "rtl" : "ltr"} className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#fbfaf8] px-5 py-8 text-slate-900">
