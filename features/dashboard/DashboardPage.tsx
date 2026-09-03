@@ -111,12 +111,13 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
     if (supabase) await supabase.auth.signOut();
     router.replace("/login");
   }
+  function confirmDelete() { return window.confirm(language === "ar" ? "هل تريد الحذف؟ لا يمكن التراجع عن هذا الإجراء." : "Do you want to delete this? This action cannot be undone."); }
   function toggleTask(id: string) { setTasks((current) => current.map((task) => { if (task.id !== id) return task; const updated = { ...task, done: !task.done }; if (userId && supabase) void supabase.from("tasks").update({ done: updated.done }).eq("id", id).eq("user_id", userId); return updated; })); }
-  function removeTask(id: string) { setTasks((current) => current.filter((task) => task.id !== id)); if (userId && supabase) void supabase.from("tasks").delete().eq("id", id).eq("user_id", userId); }
-  function removeEvent(id: string) { setEvents((current) => current.filter((event) => event.id !== id)); if (userId && supabase) void supabase.from("events").delete().eq("id", id).eq("user_id", userId); }
-  function removeBook(id: string) { setBooks((current) => current.filter((book) => book.id !== id)); if (userId && supabase) void supabase.from("books").delete().eq("id", id).eq("user_id", userId); }
-  function removeCourse(id: string) { setCourses((current) => current.filter((course) => course.id !== id)); if (userId && supabase) void supabase.from("courses").delete().eq("id", id).eq("user_id", userId); }
-  function resetData() { setTasks(initialTasks); setEvents(initialSchedule); setBooks(initialBooks); setCourses(initialCourses); setProfile(initialProfile); }
+  function removeTask(id: string) { if (!confirmDelete()) return; setTasks((current) => current.filter((task) => task.id !== id)); if (userId && supabase) void supabase.from("tasks").delete().eq("id", id).eq("user_id", userId); }
+  function removeEvent(id: string) { if (!confirmDelete()) return; setEvents((current) => current.filter((event) => event.id !== id)); if (userId && supabase) void supabase.from("events").delete().eq("id", id).eq("user_id", userId); }
+  function removeBook(id: string) { if (!confirmDelete()) return; setBooks((current) => current.filter((book) => book.id !== id)); if (userId && supabase) void supabase.from("books").delete().eq("id", id).eq("user_id", userId); }
+  function removeCourse(id: string) { if (!confirmDelete()) return; setCourses((current) => current.filter((course) => course.id !== id)); if (userId && supabase) void supabase.from("courses").delete().eq("id", id).eq("user_id", userId); }
+  function resetData() { if (!window.confirm(language === "ar" ? "هل تريد إعادة بيانات التجربة؟ سيتم استبدال التغييرات الحالية." : "Reset demo data? Your current changes will be replaced.")) return; setTasks(initialTasks); setEvents(initialSchedule); setBooks(initialBooks); setCourses(initialCourses); setProfile(initialProfile); }
 
   function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget);
