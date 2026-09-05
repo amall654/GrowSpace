@@ -45,7 +45,6 @@ export default function Home() {
         </nav>
         <div className="flex items-center gap-3">
           <button onClick={switchLanguage} className="rounded-full border border-orange-200 bg-white px-3 py-2 text-xs font-bold text-orange-600 transition hover:bg-orange-50" aria-label="Change language">{t.language}</button>
-          <Link href="/demo" className="hidden rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-orange-600 sm:block">{language === "ar" ? "جرّب المنصة" : "Try the platform"}</Link>
         </div>
       </header>
 
