@@ -3,6 +3,42 @@
 > **مساحة واحدة تساعد الطالب على تنظيم يومه الأكاديمي وبناء عادات تدعم نموه.**
 > **One space for students to organize their academic day and build habits that support their growth.**
 
+## تنظيم الموقع وتشغيله / Website structure and development
+
+هذا المجلد مشروع الموقع فقط، وهو مستقل عن `mobileapp`. جميع أوامر الموقع تُنفذ من داخل `Website`، ولا يعتمد على ملفات أو حزم من تطبيق الجوال.
+
+```text
+Website/
+├── app/                 # صفحات Next.js وتخطيط الموقع والترجمة في i18n
+├── features/            # الحسابات، لوحة الطالب، وصفحات السياسات
+├── components/          # مكونات الموقع، ومنها صفحة الهبوط
+├── lib/supabase/        # اتصال الموقع بخدمة Supabase
+├── public/              # صور وأصول الموقع
+├── supabase/            # تعريف جداول وسياسات قاعدة بيانات الموقع
+├── package.json         # أوامر الموقع واعتمادياته فقط
+├── pnpm-lock.yaml       # الإصدارات المقفلة لاعتماديات الموقع
+└── .env.example         # أسماء إعدادات البيئة دون مفاتيح حقيقية
+```
+
+```sh
+cd Website
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+لإعداد نسخة جديدة محليًا، أنشئ `.env.local` داخل `Website` باستخدام أسماء المتغيرات في `.env.example`. هذا الملف محلي ومتجاهل من Git. إعداد تسجيل Google مؤجل حاليًا.
+
+```sh
+pnpm typecheck
+pnpm build
+```
+
+يُنتج البناء ملفات الموقع الثابتة داخل `Website/out`. مسار صفحات الموقع المنشور لا يتغير بسبب اسم هذا المجلد. إعداد النشر في `.github/workflows/deploy-pages.yml` يبني هذا المشروع وحده.
+
+This directory contains only the website. Its source, assets, dependencies, environment files, and build settings are independent of `mobileapp`. Run installation, development, type checking, and builds from `Website`. For a fresh checkout, create a local `.env.local` using the variable names in `.env.example`; never commit credentials. Google sign-in remains deferred. Static export writes to `Website/out`, and the repository-level GitHub workflow deploys only this directory's build.
+
+The directory reorganization preserves existing product behavior; it does not complete pending authentication, persistence, or release-readiness work.
+
 ## العربية
 
 ### عن المشروع
@@ -68,7 +104,7 @@
 
 ### حالة المشروع والمساهمة
 
-المشروع حاليًا في **مرحلة التخطيط والتصميم**. نرحب بالأفكار والملاحظات التي تساعد على جعل GrowSpace أكثر فائدة للطلاب.
+الموقع حاليًا **نسخة أولية قيد التطوير والاختبار**. المزايا المذكورة تصف نطاق المنتج المستهدف، وليست تأكيدًا على اكتمال جميع وظائفه أو جاهزيته للإطلاق العام. نرحب بالأفكار والملاحظات التي تساعد على جعل GrowSpace أكثر فائدة للطلاب.
 
 ---
 
@@ -137,4 +173,4 @@ The backend services and user data will be structured so a future mobile applica
 
 ### Project status and contributions
 
-The project is currently in the **planning and design stage**. Ideas and feedback that can make GrowSpace more useful for students are welcome.
+The website is an **initial version under development and testing**. The features above describe the intended product scope, not a claim that all functionality is complete or ready for public release. Ideas and feedback that can make GrowSpace more useful for students are welcome.

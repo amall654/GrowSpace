@@ -1,6 +1,2 @@
-node_modules/
-.next/
-.pnpm-store/
-out/
-*.tsbuildinfo
-.env*.local
+.DS_Store
+Thumbs.db
