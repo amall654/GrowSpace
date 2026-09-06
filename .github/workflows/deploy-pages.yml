@@ -31,12 +31,15 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          cache-dependency-path: Website/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        working-directory: Website
 
       - name: Build static site
         run: pnpm build
+        working-directory: Website
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
@@ -45,7 +48,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./out
+          path: ./Website/out
 
   deploy:
     environment:

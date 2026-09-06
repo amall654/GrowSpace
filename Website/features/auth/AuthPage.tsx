@@ -58,7 +58,7 @@ export default function AuthPage() {
     if (!supabase) { setMessage({ kind: "error", text: isArabic ? "تعذر الاتصال بالخدمة. حاول مرة أخرى لاحقًا." : "We could not connect to the service. Please try again shortly." }); setIsSubmitting(false); return; }
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
     const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}${basePath}/dashboard/` } });
-    if (error) { setMessage({ kind: "error", text: isArabic ? "تسجيل Google غير مفعّل بعد. أكملي إعداد Google في Supabase ثم حاولي مرة أخرى." : "Google sign-in is not enabled yet. Complete the Google setup in Supabase and try again." }); setIsSubmitting(false); }
+    if (error) { setMessage({ kind: "error", text: isArabic ? "تسجيل Google غير مفعّل بعد. أكمل إعداد Google في Supabase ثم حاول مرة أخرى." : "Google sign-in is not enabled yet. Complete the Google setup in Supabase and try again." }); setIsSubmitting(false); }
   }
 
   return <main dir={isArabic ? "rtl" : "ltr"} className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#fbfaf8] px-5 py-8 text-slate-900">
