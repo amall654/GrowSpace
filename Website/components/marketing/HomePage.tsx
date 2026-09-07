@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import TodayPreview from "./TodayPreview";
 import { FormEvent, useEffect, useState } from "react";
 import { homeCopy, type Language } from "../../app/i18n";
 
@@ -35,7 +36,7 @@ export default function Home() {
   }
 
   return (
-    <main className="overflow-hidden bg-[#fffdf9] text-slate-900">
+    <main className="marketing-page overflow-hidden bg-[#fffdf9] text-slate-900">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 lg:px-8">
         <a className="flex items-center gap-2 text-xl font-black tracking-tight text-slate-900" href="#top"><img src={logoSrc} alt="GrowSpace" className="h-9 w-9 object-contain" /><span>Grow<span className="text-orange-500">Space</span></span></a>
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
@@ -61,16 +62,7 @@ export default function Home() {
 
         <div className="relative mx-auto w-full max-w-md">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-orange-100 blur-2xl" />
-          <div className="relative rounded-[2rem] border border-orange-100 bg-white p-5 shadow-2xl shadow-orange-100/70">
-            <div className="mb-5 flex items-center justify-between">
-              <div><p className="text-xs font-bold text-orange-500">GrowSpace</p><h2 className="mt-1 text-lg font-black">{t.previewTitle}</h2></div>
-              <span className="rounded-xl bg-orange-50 px-3 py-2 text-xl">☀</span>
-            </div>
-            <div className="space-y-3">
-              {t.previewTasks.map((task, index) => <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3" key={task}><span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${index === 0 ? "bg-orange-500 text-white" : "border-2 border-orange-200 text-orange-400"}`}>{index === 0 ? "✓" : ""}</span><span className="text-sm font-semibold text-slate-700">{task}</span></div>)}
-            </div>
-            <div className="mt-5 rounded-2xl bg-orange-500 p-4 text-white"><div className="flex justify-between text-xs font-bold"><span>{t.previewDone}</span><span>50%</span></div><div className="mt-3 h-2 overflow-hidden rounded-full bg-white/30"><div className="h-full w-1/2 rounded-full bg-white" /></div></div>
-          </div>
+          <TodayPreview language={language} />
         </div>
       </section>
 

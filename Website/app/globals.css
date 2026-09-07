@@ -10,6 +10,12 @@ h1, h2, h3 { line-height: 1.45; }
 button { touch-action: manipulation; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #f97316; outline-offset: 3px; }
 .overview-space { font-weight: 400; }
+.marketing-page { font-family: Tahoma, "Segoe UI", Arial, sans-serif; }
+.marketing-page h1 { font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 700; line-height: 1.55; letter-spacing: normal; text-wrap: balance; }
+.marketing-page h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 700; line-height: 1.6; letter-spacing: normal; }
+.marketing-page h3 { font-size: 1.125rem; font-weight: 600; line-height: 1.7; }
+.marketing-page p { line-height: 1.9; }
+.marketing-page #top > div > p:not(:first-child) { font-size: 1.0625rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
