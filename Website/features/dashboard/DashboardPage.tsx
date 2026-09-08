@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { dashboardCopy, type Language } from "../../app/i18n";
 import { getSupabaseBrowserClient } from "../../lib/supabase/browser";
-import { initialBooks, initialCourses, initialProfile, initialSchedule, initialTasks, storageKey } from "./data";
+import { initialProfile } from "./data";
 import type { Book, BookStatus, ClassEvent, Course, Priority, Profile, Tab, Task, TaskFilter } from "./types";
 
 
@@ -23,15 +23,15 @@ function localDateKey(daysFromToday = 0) {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-export default function DashboardPage({ demo = false }: { demo?: boolean }) {
+export default function DashboardPage() {
   const router = useRouter();
   const [language, setLanguage] = useState<Language>("ar");
   const [tab, setTab] = useState<Tab>("overview");
   const [taskFilter, setTaskFilter] = useState<TaskFilter>("all");
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [events, setEvents] = useState<ClassEvent[]>(initialSchedule);
-  const [books, setBooks] = useState<Book[]>(initialBooks);
-  const [courses, setCourses] = useState<Course[]>(initialCourses);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [events, setEvents] = useState<ClassEvent[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -45,12 +45,11 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
   const [focusRunning, setFocusRunning] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
-  const supabase = demo ? null : getSupabaseBrowserClient();
+  const supabase = getSupabaseBrowserClient();
   const t = dashboardCopy[language];
   const logoSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/brand/growspace-logo.png`;
 
   useEffect(() => {
-    if (demo) { setIsCheckingSession(false); return; }
     if (!supabase) { setIsCheckingSession(false); return; }
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) router.replace("/login");
@@ -73,20 +72,12 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
       }
       setIsCheckingSession(false);
     });
-  }, [demo, router, supabase]);
+  }, [router, supabase]);
 
   useEffect(() => {
-    const stored = supabase ? null : localStorage.getItem(storageKey);
     const storedLanguage = sessionStorage.getItem("growspace-language");
     if (storedLanguage === "ar" || storedLanguage === "en") setLanguage(storedLanguage);
-    if (!stored) return;
-    try {
-      const parsed = JSON.parse(stored) as { tasks?: Task[]; events?: ClassEvent[]; books?: Book[]; courses?: Course[]; profile?: Profile };
-      if (parsed.tasks && parsed.events && parsed.books) { setTasks(parsed.tasks); setEvents(parsed.events); setBooks(parsed.books); }
-      if (parsed.courses) setCourses(parsed.courses);
-      if (parsed.profile) setProfile(parsed.profile);
-    } catch { localStorage.removeItem(storageKey); }
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -103,7 +94,6 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
     return () => window.clearInterval(timer);
   }, [focusRunning]);
 
-  useEffect(() => { if (!supabase) localStorage.setItem(storageKey, JSON.stringify({ tasks, events, books, courses, profile })); }, [tasks, events, books, courses, profile, supabase]);
 
   const completedCount = tasks.filter((task) => task.done).length;
   const pendingTasks = tasks.filter((task) => !task.done);
@@ -136,7 +126,6 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
   function removeEvent(id: string) { if (!confirmDelete()) return; setEvents((current) => current.filter((event) => event.id !== id)); if (userId && supabase) void supabase.from("events").delete().eq("id", id).eq("user_id", userId); }
   function removeBook(id: string) { if (!confirmDelete()) return; setBooks((current) => current.filter((book) => book.id !== id)); if (userId && supabase) void supabase.from("books").delete().eq("id", id).eq("user_id", userId); }
   function removeCourse(id: string) { if (!confirmDelete()) return; setCourses((current) => current.filter((course) => course.id !== id)); if (userId && supabase) void supabase.from("courses").delete().eq("id", id).eq("user_id", userId); }
-  function resetData() { if (!window.confirm(language === "ar" ? "هل تريد إعادة بيانات التجربة؟ سيتم استبدال التغييرات الحالية." : "Reset demo data? Your current changes will be replaced.")) return; setTasks(initialTasks); setEvents(initialSchedule); setBooks(initialBooks); setCourses(initialCourses); setProfile(initialProfile); }
 
   function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget);
@@ -193,7 +182,8 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
 
   const nav: Array<[Tab, string, string]> = [["overview", "▦", t.dashboard], ["tasks", "✓", t.tasks], ["schedule", "◷", t.schedule], ["library", "⌁", t.library], ["courses", "▤", t.courses], ["reminders", "◷", t.reminders]];
 
-  if (isCheckingSession) return <main className="flex min-h-screen items-center justify-center bg-[#fffaf5] text-slate-500">GrowSpace</main>;
+  if (!supabase) return <main className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[#fffaf5] p-6 text-center"><h1 className="text-xl font-bold">{language === "ar" ? "خدمة الحساب غير متاحة حاليًا" : "Account service is currently unavailable"}</h1><Link href="/preview" className="font-bold text-orange-700">{language === "ar" ? "استعرض نموذج لوحة الطالب" : "View the student dashboard preview"}</Link></main>;
+  if (isCheckingSession || !userId) return <main className="flex min-h-screen items-center justify-center bg-[#fffaf5] text-slate-500">GrowSpace</main>;
 
   return <main className="min-h-screen bg-[#fffaf5] text-slate-900">
     <div className="mx-auto flex min-h-screen max-w-7xl">
@@ -205,7 +195,6 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
 
       <section className="min-w-0 flex-1 px-5 py-6 sm:px-8 lg:px-10" dir={language === "ar" ? "rtl" : "ltr"}>
         <header className="flex items-center justify-between gap-4"><div><p className="text-sm font-bold text-orange-500">GrowSpace</p><h1 className="mt-1 text-xl font-black sm:text-2xl">{t.hello}، {profile.name}</h1></div><div className="flex items-center gap-2"><button aria-label={t.profile} title={t.profile} onClick={() => setShowProfileForm(true)} className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-200 bg-white text-sm font-black text-orange-600 shadow-sm transition hover:bg-orange-50">{profile.name.trim().charAt(0) || "G"}</button>{userId && <button aria-label={t.signOut} title={t.signOut} onClick={signOut} className="hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-500 hover:text-orange-600 sm:block">↗</button>}<button onClick={switchLanguage} className="rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-bold text-orange-600">{t.language}</button></div></header>
-        {demo && <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800"><span className="font-bold">{language === "ar" ? "وضع التجربة: أضف وعدّل واحذف بياناتك بحرية. تحفظ البيانات في هذا المتصفح فقط." : "Demo mode: add, edit, and delete freely. Data is saved in this browser only."}</span><Link href="/login" className="font-black text-orange-600 hover:text-orange-700">{language === "ar" ? "أنشئ حسابًا للحفظ الدائم" : "Create an account to save permanently"}</Link></div>}
         <div className="mt-6 flex gap-2 overflow-x-auto pb-1 lg:hidden">{nav.map(([id, icon, label]) => <button key={id} onClick={() => setTab(id)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold ${tab === id ? "bg-orange-500 text-white" : "bg-white text-slate-600"}`}>{icon} {label}</button>)}</div>
 
         {tab === "overview" && <Overview t={t} language={language} tasks={orderedTasks} events={orderedEvents} completedCount={completedCount} pendingCount={pendingTasks.length} weeklyGoal={profile.weeklyGoal} onAdd={() => setShowTaskForm(true)} onToggle={toggleTask} onEdit={setEditingTask} onViewTasks={() => { setTaskFilter("all"); setTab("tasks"); }} focusSeconds={focusSeconds} focusRunning={focusRunning} onFocus={() => setFocusRunning((running) => !running)} onResetFocus={() => { setFocusRunning(false); setFocusSeconds(25 * 60); }} dayMap={languageDayMap} />}
@@ -215,7 +204,6 @@ export default function DashboardPage({ demo = false }: { demo?: boolean }) {
         {tab === "courses" && <CoursesPanel t={t} language={language} courses={courses} tasks={tasks} onAdd={() => setShowCourseForm(true)} onEdit={setEditingCourse} onRemove={removeCourse} />}
         {tab === "reminders" && <RemindersPanel t={t} groups={reminderGroups} language={language} onToggle={toggleTask} onViewTasks={() => { setTaskFilter("open"); setTab("tasks"); }} />}
 
-        {!userId && <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-orange-100 pt-5 text-xs text-slate-500"><span>{t.resetHint}</span><button onClick={resetData} className="font-bold text-orange-600 hover:underline">{t.reset}</button></div>}
       </section>
     </div>
     {showTaskForm && <Modal title={t.quickAdd} onClose={() => setShowTaskForm(false)}><form onSubmit={addTask} className="space-y-4"><Field name="title" label={t.taskTitle} required /><Select name="course" label={t.course} options={[["", t.noCourse], ...courses.map((course) => [course.name, course.name] as [string, string])]} /><div className="grid gap-4 sm:grid-cols-2"><Field name="due" label={t.due} type="date" defaultValue={new Date().toISOString().slice(0, 10)} /><Select name="priority" label={t.priority} options={[["high", t.high], ["medium", t.medium], ["low", t.low]]} /></div><Submit label={t.add} cancel={t.cancel} onCancel={() => setShowTaskForm(false)} /></form></Modal>}

@@ -37,7 +37,7 @@ export type DashboardCopy = {
   focus: string; focusText: string; startFocus: string; focusActive: string;
   scheduleTitle: string; addEvent: string; eventTitle: string; day: string; time: string; type: string; lecture: string; exam: string; noEvents: string;
   libraryTitle: string; addBook: string; bookTitle: string; author: string; status: string; progress: string; note: string; reading: string; planned: string; finished: string; noBooks: string;
-  save: string; change: string; reset: string; resetHint: string; goal: string; goalText: string; tasksUnit: string; days: readonly [string, string, string, string, string];
+  save: string; change: string; goal: string; goalText: string; tasksUnit: string; days: readonly [string, string, string, string, string];
   courses: string; addCourse: string; courseName: string; courseCode: string; noCourses: string; profile: string; name: string; editProfile: string; weeklyProgress: string; weeklyGoal: string; reminders: string; dueSoon: string; noReminders: string; noCourse: string; signOut: string;
 };
 

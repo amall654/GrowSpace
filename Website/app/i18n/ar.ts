@@ -48,7 +48,7 @@ export const dashboardAr: DashboardCopy = {
   focus: "جلسة تركيز", focusText: "ابدأ جلسة تركيز قصيرة لمدة 25 دقيقة.", startFocus: "ابدأ التركيز", focusActive: "جلسة التركيز بدأت — بالتوفيق!",
   scheduleTitle: "جدولك الأكاديمي", addEvent: "إضافة موعد", eventTitle: "عنوان الموعد", day: "اليوم", time: "الوقت", type: "النوع", lecture: "محاضرة", exam: "اختبار أو مراجعة", noEvents: "لم تضف أي مواعيد بعد.",
   libraryTitle: "مكتبتي", addBook: "إضافة كتاب", bookTitle: "اسم الكتاب", author: "المؤلف", status: "الحالة", progress: "التقدم", note: "ملاحظات أو ملخص", reading: "أقرأه الآن", planned: "أرغب بقراءته", finished: "أنهيته", noBooks: "مكتبتك فارغة حاليًا.",
-  save: "حفظ", change: "تعديل", reset: "إعادة بيانات التجربة", resetHint: "تم حفظ بياناتك في هذا المتصفح فقط.", goal: "هدف الأسبوع", goalText: "أكمل 5 مهام دراسية", tasksUnit: "مهام", days: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"],
+  save: "حفظ", change: "تعديل", goal: "هدف الأسبوع", goalText: "أكمل 5 مهام دراسية", tasksUnit: "مهام", days: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"],
   courses: "المواد", addCourse: "إضافة مادة", courseName: "اسم المادة", courseCode: "رمز المادة", noCourses: "لم تضف أي مواد بعد.", profile: "الملف الشخصي", name: "الاسم", editProfile: "تعديل الملف", weeklyProgress: "تقدم الأسبوع", weeklyGoal: "هدف الأسبوع", reminders: "التذكيرات", dueSoon: "قريبًا", noReminders: "لا توجد تذكيرات قريبة.", noCourse: "بدون مادة", signOut: "تسجيل الخروج",
 };
 

@@ -55,7 +55,7 @@ export default function Home() {
           <h1 className="max-w-xl text-4xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">{t.title}</h1>
           <p className="mt-6 max-w-lg text-lg leading-8 text-slate-600">{t.lead}</p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link href="/demo" className="rounded-full bg-orange-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600">{language === "ar" ? "جرّب المنصة الآن" : "Try the platform now"}</Link><Link href="/login" className="text-sm font-bold text-orange-600 hover:text-orange-700">{t.join}</Link>
+            <Link href="/preview" className="rounded-full bg-orange-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600">{language === "ar" ? "استعرض لوحة الطالب" : "Preview the student dashboard"}</Link><Link href="/login" className="text-sm font-bold text-orange-600 hover:text-orange-700">{t.join}</Link>
             <span className="text-sm font-medium text-slate-500">{t.heroNote}</span>
           </div>
         </div>

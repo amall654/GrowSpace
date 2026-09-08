@@ -1,5 +1,5 @@
-import DashboardPage from "../../features/dashboard/DashboardPage";
+import PreviewPage from "../../features/preview/PreviewPage";
 
 export default function DemoPage() {
-  return <DashboardPage demo />;
+  return <PreviewPage />;
 }
