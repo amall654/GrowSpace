@@ -4,6 +4,7 @@ const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === "true";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
+  distDir: process.env.GROWSPACE_TEST_BUILD === "true" ? ".next-test" : ".next",
   trailingSlash: true,
   basePath: isGitHubPagesBuild && repositoryName ? `/${repositoryName}` : "",
   env: {

@@ -1,9 +1,9 @@
 export type Tab = "overview" | "tasks" | "schedule" | "library" | "courses" | "reminders";
 export type Priority = "high" | "medium" | "low";
 export type TaskFilter = "all" | "open" | "done";
-export type Task = { id: string; title: string; course: string; due: string; priority: Priority; done: boolean };
-export type ClassEvent = { id: string; title: string; course: string; day: string; time: string; kind: "class" | "exam" };
+export type Task = { revision?: number; id: string; title: string; course: string; courseId?: string; due: string; priority: Priority; done: boolean; completedAt?: string | null };
+export type ClassEvent = { revision?: number; id: string; title: string; course: string; courseId?: string; day: string; time: string; kind: "class" | "exam" };
 export type BookStatus = "reading" | "planned" | "finished";
-export type Book = { id: string; title: string; author: string; progress: number; status: BookStatus; note: string };
-export type Course = { id: string; name: string; code: string; color: string };
-export type Profile = { name: string; weeklyGoal: number };
+export type Book = { revision?: number; id: string; title: string; author: string; progress: number; status: BookStatus; note: string };
+export type Course = { revision?: number; id: string; name: string; code: string; color: string };
+export type Profile = { revision?: number; name: string; weeklyGoal: number };

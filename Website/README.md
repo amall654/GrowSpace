@@ -1,182 +1,55 @@
-# GrowSpace
+# GrowSpace Web
 
-> **مساحة واحدة تساعد الطالب على تنظيم يومه الأكاديمي وبناء عادات تدعم نموه.**
-> **One space for students to organize their academic day and build habits that support their growth.**
+موقع Next.js مستقل عن مجلد تطبيق الجوال. يستخدم Firebase Authentication للحسابات وCloud Firestore لبيانات الطالب. البيانات تحت `users/{uid}`، والمواد والمهام والمواعيد والكتب مجموعات فرعية خاصة بالحساب.
 
-## معاينة لوحة الطالب
-
-المسار `/preview` يعرض لوحة تفاعلية للعرض فقط ببيانات تعليمية ثابتة. يمكن التنقل بين الأقسام وتصفية المهام وتبديل اللغة، دون إنشاء البيانات أو تعديلها أو حذفها أو حفظها. حالة العرض مؤقتة في الذاكرة فقط؛ لا تقرأ المعاينة جلسة الحساب أو `localStorage` أو `sessionStorage`، ولا تتصل بـ Supabase. يعرض `/demo` القديم المعاينة نفسها لتوافق الروابط، وأُزيلت تجربة البيانات القابلة للتعديل. بطاقة الرئيسية تعرض أمثلة ثابتة أيضًا.
-
-بيانات الأمثلة في `features/preview/data.ts` مستقلة عن الحساب، وتستخدم تاريخًا تعليميًا ثابتًا ظاهرًا في الواجهة. لا تُستورد بيانات التجربة القديمة إلى المعاينة ولا تُحذف بيانات متصفح المستخدم تلقائيًا.
-
-## تنظيم الموقع وتشغيله / Website structure and development
-
-هذا المجلد مشروع الموقع فقط، وهو مستقل عن `mobileapp`. جميع أوامر الموقع تُنفذ من داخل `Website`، ولا يعتمد على ملفات أو حزم من تطبيق الجوال.
-
-```text
-Website/
-├── app/                 # صفحات Next.js وتخطيط الموقع والترجمة في i18n
-├── features/            # الحسابات، لوحة الطالب، وصفحات السياسات
-├── components/          # مكونات الموقع، ومنها صفحة الهبوط
-├── lib/supabase/        # اتصال الموقع بخدمة Supabase
-├── public/              # صور وأصول الموقع
-├── supabase/            # تعريف جداول وسياسات قاعدة بيانات الموقع
-├── package.json         # أوامر الموقع واعتمادياته فقط
-├── pnpm-lock.yaml       # الإصدارات المقفلة لاعتماديات الموقع
-└── .env.example         # أسماء إعدادات البيئة دون مفاتيح حقيقية
-```
+## التشغيل
 
 ```sh
-cd Website
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-لإعداد نسخة جديدة محليًا، أنشئ `.env.local` داخل `Website` باستخدام أسماء المتغيرات في `.env.example`. هذا الملف محلي ومتجاهل من Git. إعداد تسجيل Google مؤجل حاليًا.
+الإعداد العام للتطبيق في `lib/firebase/config.ts`؛ لا يحتوي مفاتيح إدارة خاصة. انسخ `.env.example` إلى `.env.local` عند الحاجة إلى المحاكيات. لا تستخدم مفاتيح Service Account في المتصفح. لا تُهيَّأ Analytics أو Messaging أو Storage أو AI في هذه المرحلة.
+
+## الحسابات والبيانات
+
+- البريد وكلمة المرور وGoogle عبر Firebase Authentication.
+- لا تفتح بيانات الحساب قبل تأكيد البريد؛ يقدم التسجيل إعادة إرسال رابط التحقق وفحص اكتماله.
+- إعادة تعيين كلمة المرور تتم برمز إجراء Firebase صالح؛ لا تكفي جلسة حساب عامة.
+- البيانات تقرأ من الخادم، وعمليات التعديل تستخدم معاملات مع رقم إصدار لمنع الكتابة فوق تعديل أحدث.
+- تظهر المدخلات غير المحفوظة كمسودات محلية تحت مفتاح خاص بمعرّف Firebase؛ تعاد مراجعتها يدويًا بعد الدخول للحساب نفسه. لا تُخزّن كلمات المرور أو رموز الجلسة في المسودات.
+- إعادة محاولة الكتابة نفسها لا تكرر السجل. المسودة المتعارضة لا تستبدل بيانات الخادم تلقائيًا.
+- اسم المادة للعرض؛ الربط يستخدم `courseId`. يتطلب حذف مادة مرتبطة فك ارتباط عناصرها من نماذج التعديل أولًا؛ خيارات الحذف الجماعي في SRS ما زالت متطلبًا مستهدفًا.
+- المواعيد الحالية أسبوعية؛ الاختبار المؤرخ والمؤشرات الأسبوعية التفصيلية ما زالت ضمن فجوات SRS.
+
+## المعاينة
+
+`/preview` و`/demo` يعرضان الأمثلة الثابتة نفسها، دون تسجيل أو تعديل أو تخزين أو استدعاء Firebase. التنقل والتصفية واللغة حالات مؤقتة في الذاكرة. رابط إنشاء الحساب يفتح `/login/?mode=signup`.
+
+## الاختبارات
+
+يلزم Node.js متوافق مع الأدوات وJava 21 أو أحدث للمحاكي.
 
 ```sh
 pnpm typecheck
+pnpm test:firebase
 pnpm build
 ```
 
-يُنتج البناء ملفات الموقع الثابتة داخل `Website/out`. مسار صفحات الموقع المنشور لا يتغير بسبب اسم هذا المجلد. إعداد النشر في `.github/workflows/deploy-pages.yml` يبني هذا المشروع وحده.
+اختبارات `tests/firebase.test.ts` تعمل على `demo-growspace` فقط: عزل الحسابات، منع الزائر والحساب غير المؤكد، التحقق من المدخلات، تعارض المسودات وعدم تكرار الكتابة. رسائل رفض الصلاحيات متوقعة في اختبارات الرفض.
 
-This directory contains only the website. Its source, assets, dependencies, environment files, and build settings are independent of `mobileapp`. Run installation, development, type checking, and builds from `Website`. For a fresh checkout, create a local `.env.local` using the variable names in `.env.example`; never commit credentials. Google sign-in remains deferred. Static export writes to `Website/out`, and the repository-level GitHub workflow deploys only this directory's build.
+لتجربة الموقع على المحاكيات، شغّل `pnpm emulators` واضبط `NEXT_PUBLIC_FIREBASE_EMULATORS=true` قبل تشغيل نسخة تطوير منفصلة. لا تضبطه على true في النشر.
 
-The directory reorganization preserves existing product behavior; it does not complete pending authentication, persistence, or release-readiness work.
+## تجهيز Firebase والنشر
 
-## العربية
+1. سجّل الدخول في CLI: `node node_modules/firebase-tools/lib/bin/firebase.js login`، وأكمل التفويض بنفسك؛ لا تشارك رمز الدخول.
+2. تحقق من مشروع `growspace-c516a` والبريد وGoogle ونطاقات الدخول المسموحة.
+3. أنشئ قاعدة Firestore باسم `(default)` بنمط Production واختر موقعها قبل الإنشاء. لا تستخدم قواعد Test Mode المفتوحة.
+4. ابنِ الموقع ثم انشر القواعد والاستضافة باستخدام `pnpm deploy:firebase` بعد مراجعة الجاهزية.
+5. تحقق من التسجيل وGoogle وكتابة بيانات حساب اختبار على النطاق المنشور.
 
-### عن المشروع
-
-**GrowSpace** هي منصة ويب متجاوبة موجهة لطلاب الجامعات، تساعدهم على تنظيم الأنشطة الأكاديمية والشخصية في مكان واحد. تركز المنصة على إدارة الجداول والمهام والواجبات والاختبارات، بحيث يعرف الطالب ما الذي يجب عليه إنجازه اليوم وما الذي ينتظره لاحقًا.
-
-تُعد مساحة القراءة ميزة اختيارية مساندة للتطور الشخصي، وليست محور المنصة أو شرطًا لاستخدامها.
-
-### المشكلة
-
-يستخدم الطالب غالبًا أدوات متعددة لمتابعة المحاضرات، الواجبات، الاختبارات، والمواعيد الشخصية. هذا التشتت قد يجعل ترتيب الأولويات ومتابعة الإنجاز أكثر صعوبة. تهدف GrowSpace إلى جمع هذه الاحتياجات في تجربة واحدة بسيطة ومخصصة للطلاب.
-
-### الهدف والقيمة
-
-تهدف المنصة إلى مساعدة الطالب على إدارة وقته بوضوح، الالتزام بالمواعيد المهمة، وتحويل أهدافه الدراسية إلى مهام قابلة للمتابعة. تقدم GrowSpace نظرة يومية سهلة، بدلاً من أن يحتاج الطالب إلى التنقل بين عدة تطبيقات.
-
-### الفئة المستهدفة
-
-- طلاب الجامعات بوصفهم الجمهور الأساسي.
-- طلاب المدارس في مراحل لاحقة.
-- الطلاب الذين يرغبون في تنظيم الدراسة والحياة اليومية بطريقة أبسط.
-
-### مزايا النسخة الأولى
-
-- **لوحة يومية:** عرض مهام اليوم، المواعيد القريبة، ونظرة سريعة على التقدم.
-- **الجدول الأكاديمي:** تنظيم المحاضرات والاختبارات والمواعيد المتكررة.
-- **إدارة المهام:** إضافة واجبات ومشاريع مع تاريخ استحقاق، أولوية، وحالة إنجاز.
-- **التذكيرات:** تنبيهات بالمواعيد والمهام المهمة.
-- **الأهداف والتركيز:** متابعة أهداف الدراسة وتسجيل جلسات تركيز مبسطة.
-
-### المكتبة والقراءة — ميزة اختيارية
-
-توفر GrowSpace مساحة اختيارية للطلاب المهتمين بالقراءة، وتشمل:
-
-- حفظ الكتب ضمن حالات مثل: أرغب في قراءته، أقرأه الآن، أنهيته.
-- متابعة تقدم القراءة.
-- كتابة ملخصات وملاحظات واقتباسات شخصية.
-- تحديد أهداف قرائية بسيطة.
-
-هذه المساحة مستقلة عن أدوات التنظيم الأساسية؛ يستطيع الطالب استخدامها أو تجاهلها دون أن يؤثر ذلك في تجربته داخل المنصة.
-
-### رحلة استخدام مختصرة
-
-1. ينشئ الطالب حسابه ويضيف محاضراته واختباراته إلى الجدول.
-2. يضيف واجباته ومشاريعه، ويحدد موعدها وأولويتها.
-3. يراجع لوحة اليوم لمعرفة ما يجب إنجازه، ثم يحدّث حالة مهامه عند إكمالها.
-4. يمكنه اختياريًا إضافة كتاب إلى مكتبته، وتسجيل تقدمه وملخصه الشخصي.
-
-### التقنيات المقترحة
-
-- **Next.js:** لبناء موقع ويب سريع ومتجاوب يعمل على الجوال واللابتوب.
-- **Tailwind CSS:** لتصميم واجهة واضحة ومتسقة.
-- **Supabase:** لتسجيل الدخول، قاعدة البيانات، وتخزين الملفات عند الحاجة.
-
-ستُصمم الخدمات الخلفية وبيانات المستخدمين بطريقة تسمح مستقبلًا بإنشاء تطبيق جوال يستخدم الحسابات والبيانات نفسها.
-
-### التطوير المستقبلي
-
-- تطبيق جوال لأندرويد وآيفون.
-- إحصاءات أكثر تفصيلًا عن الإنجاز والدراسة.
-- مشاركة اختيارية للملخصات أو التحديات مع الآخرين.
-- اقتراحات كتب بحسب التخصص أو الاهتمامات.
-
-### حالة المشروع والمساهمة
-
-الموقع حاليًا **نسخة أولية قيد التطوير والاختبار**. المزايا المذكورة تصف نطاق المنتج المستهدف، وليست تأكيدًا على اكتمال جميع وظائفه أو جاهزيته للإطلاق العام. نرحب بالأفكار والملاحظات التي تساعد على جعل GrowSpace أكثر فائدة للطلاب.
-
----
+ملف `firebase.json` مهيأ للاستضافة الثابتة. النشر الحالي في GitHub Pages لا يزال متاحًا ويستخدم الإعداد العام نفسه؛ حذف متغيرات مزود البيانات السابق من سير البناء لا ينقل الاستضافة تلقائيًا. راجع `MIGRATION.md` لحالة الانتقال والمهام الخارجية المتبقية.
 
 ## English
 
-### About the project
-
-**GrowSpace** is a responsive web platform for university students. It helps them organize academic and personal activities in one place. The platform focuses on schedules, tasks, assignments, projects, and exams, so students can clearly see what needs to be done today and what is coming next.
-
-The reading space is an optional feature that supports personal growth; it is not the platform's main purpose or a requirement for using it.
-
-### The problem
-
-Students often use separate tools for lectures, assignments, exams, and personal appointments. This fragmentation can make it harder to prioritize and track progress. GrowSpace brings these needs together in one simple student-focused experience.
-
-### Goal and value
-
-The platform aims to help students manage time clearly, keep up with important deadlines, and turn academic goals into trackable tasks. GrowSpace provides an easy daily overview instead of requiring students to move between several apps.
-
-### Target audience
-
-- University students as the primary audience.
-- School students in later stages.
-- Students who want a simpler way to organize study and daily life.
-
-### First-release features
-
-- **Daily dashboard:** Shows today’s tasks, upcoming events, and a quick progress overview.
-- **Academic schedule:** Organizes lectures, exams, and recurring events.
-- **Task management:** Adds assignments and projects with due dates, priorities, and completion status.
-- **Reminders:** Notifies students about important events and tasks.
-- **Goals and focus:** Tracks study goals and simple focus sessions.
-
-### Library and reading — an optional feature
-
-GrowSpace includes an optional space for students who enjoy reading:
-
-- Save books with statuses such as want to read, currently reading, and completed.
-- Track reading progress.
-- Write personal summaries, notes, and favorite quotes.
-- Set simple reading goals.
-
-This space is independent from the core organization tools. Students can use or ignore it without affecting their main platform experience.
-
-### Short user journey
-
-1. A student creates an account and adds lectures and exams to the schedule.
-2. They add assignments and projects with deadlines and priorities.
-3. They check the daily dashboard, complete tasks, and update their status.
-4. Optionally, they add a book to their library and record their reading progress and personal summary.
-
-### Proposed technology stack
-
-- **Next.js:** Builds a fast, responsive web experience for mobile and laptop use.
-- **Tailwind CSS:** Creates a clear and consistent interface.
-- **Supabase:** Provides authentication, a database, and file storage when needed.
-
-The backend services and user data will be structured so a future mobile application can use the same accounts and data.
-
-### Future development
-
-- A mobile application for Android and iOS.
-- More detailed productivity and study insights.
-- Optional sharing of summaries or challenges with others.
-- Book recommendations based on a student’s major or interests.
-
-### Project status and contributions
-
-The website is an **initial version under development and testing**. The features above describe the intended product scope, not a claim that all functionality is complete or ready for public release. Ideas and feedback that can make GrowSpace more useful for students are welcome.
+Next.js static web app using Firebase Authentication and private Firestore subcollections. Email verification is required before account data access. Firestore writes are server-confirmed transactions; per-account local drafts are reviewed before retry, and stale revisions are rejected. Preview routes never initialize Firebase or access browser storage. File uploads, AI, push messaging and analytics are not enabled by this migration. Production deployment and old-service retirement require the separate checks in MIGRATION.md.

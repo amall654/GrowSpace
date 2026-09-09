@@ -44,8 +44,6 @@ jobs:
         run: pnpm build
         working-directory: Website
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
           GITHUB_ACTIONS: "true"
 
       - name: Upload Pages artifact
@@ -54,6 +52,8 @@ jobs:
           path: ./Website/out
 
   deploy:
+    # Enable only after the Firebase production readiness checks in MIGRATION.md.
+    if: vars.FIREBASE_MIGRATION_READY == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

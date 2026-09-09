@@ -6,3 +6,7 @@ out/
 .env
 .env.*
 !.env.example
+
+.firebase/
+*-debug.log
+.next-test/
