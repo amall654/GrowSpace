@@ -1,0 +1,36 @@
+const {chromium}=require('C:/Users/HP/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+ const ctx=await browser.newContext({viewport:{width:1440,height:1000}});const page=await ctx.newPage();
+ page.setDefaultTimeout(30000); const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await ctx.route('**/*',route=>{const host=new URL(route.request().url()).hostname;if(!['127.0.0.1','localhost'].includes(host))return route.abort();return route.continue();});
+ await page.goto('http://127.0.0.1:3011/login/?mode=signup',{timeout:120000,waitUntil:'domcontentloaded'});
+ await page.locator('[name=email]').fill('browser-test@example.com');await page.locator('[name=password]').fill('Password123!');await page.locator('[name=confirmPassword]').fill('Mismatch123');
+ await page.getByRole('button',{name:'إنشاء حساب',exact:true}).click();await page.getByRole('status').filter({hasText:'غير متطابقتين'}).waitFor();
+ await page.locator('[name=confirmPassword]').fill('Password123!');await page.getByRole('button',{name:'إنشاء حساب',exact:true}).click();await page.getByRole('button',{name:'تحققت من بريدي',exact:true}).waitFor();
+ const codes=await (await fetch('http://127.0.0.1:9099/emulator/v1/projects/demo-growspace/oobCodes')).json();
+ const code=codes.oobCodes.find(c=>c.email==='browser-test@example.com'&&c.requestType==='VERIFY_EMAIL');assert(code);
+ const verified=await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:update?key=demo-key',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({oobCode:code.oobCode})});assert(verified.ok);
+ await page.getByRole('button',{name:'تحققت من بريدي',exact:true}).click();await page.waitForURL('**/dashboard/');
+ await page.getByRole('heading',{name:/طالب/}).waitFor();
+ await page.getByRole('button',{name:/المواد/}).first().click();await page.getByRole('button',{name:/إضافة مادة/}).click();
+ await page.locator('form [name=name]').fill('مادة الاختبار');await page.locator('form [name=code]').fill('CS1');await page.locator('form button[type=submit]').click();await page.getByRole('heading',{name:'مادة الاختبار',exact:true}).waitFor();
+ await page.getByRole('button',{name:/المهام/}).first().click();await page.getByRole('button',{name:/أضف مهمة|إضافة مهمة/}).first().click();
+ await page.locator('form [name=title]').fill('مهمة محفوظة');await page.locator('form [name=course]').selectOption({label:'مادة الاختبار'});await page.locator('form button[type=submit]').click();await page.getByText('مهمة محفوظة',{exact:true}).waitFor();
+ await page.reload();await page.getByRole('button',{name:/المهام/}).first().click();await page.getByText('مهمة محفوظة',{exact:true}).waitFor();
+ await page.getByRole('button',{name:/أضف مهمة|إضافة مهمة/}).first().click();await page.locator('form [name=title]').fill('مسودة لم ترسل');
+ await page.reload();await page.getByText('مسودات محلية غير متزامنة',{exact:false}).waitFor();
+ await page.getByRole('button',{name:'تسجيل الخروج',exact:true}).click();await page.waitForURL('**/login/');
+ await page.locator('[name=email]').fill('browser-test@example.com');await page.locator('[name=password]').fill('wrongpassword');await page.getByRole('button',{name:'تسجيل الدخول',exact:true}).click();await page.getByRole('status').filter({hasText:'غير صحيحة'}).waitFor();
+ await page.locator('[name=password]').fill('Password123!');await page.getByRole('button',{name:'تسجيل الدخول',exact:true}).click();await page.waitForURL('**/dashboard/');
+ await page.getByText('مسودات محلية غير متزامنة',{exact:false}).click();await page.getByText('مسودة لم ترسل',{exact:true}).first().waitFor();
+ await page.getByRole('button',{name:'إعادة الحفظ',exact:true}).click();await page.getByRole('status').filter({hasText:'تم تأكيد الحفظ'}).waitFor();
+ await page.getByRole('button',{name:/المهام/}).first().click();await page.getByText('مسودة لم ترسل',{exact:true}).waitFor();
+ await page.screenshot({path:'C:/Users/HP/Documents/project/tmp/firebase-migration/dashboard-qa.png',fullPage:true});
+ const preview=await ctx.newPage();await preview.addInitScript(()=>{for(const name of ['getItem','setItem','removeItem','clear','key'])Storage.prototype[name]=()=>{throw new Error('Preview touched storage');};});
+ const previewErrors=[];preview.on('pageerror',e=>previewErrors.push(e.message));await preview.goto('http://127.0.0.1:3011/preview/');await preview.getByText('معاينة تفاعلية للعرض فقط',{exact:false}).waitFor();assert.deepEqual(previewErrors,[]);
+ assert.deepEqual(errors,[]);console.log('PASS browser: signup, confirmation, login, invalid credentials, course/task save+reload, unsent draft reload+signout+recovery, independent preview. No production requests.');
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
+

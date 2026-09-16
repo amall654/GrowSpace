@@ -1,0 +1,60 @@
+{
+  "pages": 30,
+  "requirements_present_in_both": 56,
+  "diagrams": 3,
+  "all_test_and_usecase_ids_present": true,
+  "out_of_bounds_pages": [],
+  "visually_reviewed_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+  ],
+  "render_review": "Native Word PDF export; pages 5-11 pixel-identical to inspected preceding render; all other final pages inspected directly",
+  "approval": "S11 session drafts and S12 read-only preview approved; remainder of detailed decision bundle pending",
+  "geometry": {
+    "pgSz": {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "12240",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "15840"
+    },
+    "pgMar": {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}top": "1008",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}right": "1008",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}bottom": "893",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}left": "1008",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}header": "720",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footer": "720",
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}gutter": "0"
+    }
+  },
+  "artifacts": {
+    "GrowSpace_SRS_AR.docx": "b5c6fd8b653b9dab69566cb2839b86b5071fa055eba3de0f19955feff3240350",
+    "GrowSpace_SRS_AR.pdf": "b6fda1c799f9331c533f0b6dcae9efb09385b1c684cfe4715987dca92797d8be"
+  }
+}

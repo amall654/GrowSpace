@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>GrowSpace — الانتقال إلى الموقع الجديد</title>
+  <script>
+    const route = location.pathname.replace(/^\/GrowSpace(?=\/|$)/, '').replace(/^\/+|\/+$/g, '');
+    const known = ['login','auth','dashboard','demo','preview','forgot-password','reset-password','privacy','terms'];
+    const path = known.includes(route) ? '/' + route + '/' : '/';
+    location.replace('https://growspace-c516a.web.app' + path + location.search + location.hash);
+  </script>
+</head>
+<body>
+  <p>انتقلت GrowSpace إلى عنوانها الجديد.</p>
+  <a href="https://growspace-c516a.web.app/">فتح GrowSpace</a>
+</body>
+</html>

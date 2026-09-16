@@ -1,0 +1,38 @@
+import {test,after} from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,writeFile,readFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {initializeApp,deleteApp} from 'firebase-admin/app';
+import {getAuth} from 'firebase-admin/auth';
+import {getFirestore} from 'firebase-admin/firestore';
+import {sample} from './fixtures/migration.mjs';
+if(process.env.FIREBASE_AUTH_EMULATOR_HOST!=='127.0.0.1:9099'||process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8080')throw new Error('Local emulators required');
+const app=initializeApp({projectId:'demo-growspace'}),auth=getAuth(app),db=getFirestore(app);
+after(()=>deleteApp(app));
+const run=(file,mode)=>spawnSync(process.execPath,['scripts/migration/import.mjs',file,'demo-growspace',mode],{encoding:'utf8',timeout:60000});
+test('read-only preflight, import, resume, field comparison and conflict refusal on real emulators',async()=>{
+ const directory=await mkdtemp(join(tmpdir(),'growspace-import-test-')),file=join(directory,'source.json');
+ const source=sample();await writeFile(file,JSON.stringify(source));
+ let result=run(file,'--check');assert.equal(result.status,0,result.stdout+result.stderr);
+ await assert.rejects(auth.getUser('owner'),{code:'auth/user-not-found'});
+ result=run(file,'--apply');assert.equal(result.status,0,result.stdout+result.stderr);
+ const user=await auth.getUser('owner');assert.equal(user.email,'student@example.com');assert.equal(user.emailVerified,true);assert(user.providerData.some(p=>p.providerId==='google.com'&&p.uid==='google-subject'));
+ assert.equal((await db.doc('users/owner/tasks/t1').get()).data().completedAt,null);
+ assert.equal((await db.doc('users/owner/tasks/t1').get()).data().courseId,'c1');
+ result=run(file,'--apply');assert.equal(result.status,0,result.stdout+result.stderr);
+ assert.equal((await db.doc('users/owner/tasks/t1').get()).data().revision,1);
+ await db.doc('users/owner/tasks/t1').update({title:'A newer target edit',revision:2});
+ result=run(file,'--apply');assert.notEqual(result.status,0);assert.match(result.stderr,/refusing to overwrite/);
+ assert.equal((await db.doc('users/owner/tasks/t1').get()).data().title,'A newer target edit');
+ assert.deepEqual(JSON.parse(await readFile(file,'utf8')),source);
+});
+test('same email with another uid blocks import before creating source uid',async()=>{
+ const directory=await mkdtemp(join(tmpdir(),'growspace-conflict-test-')),file=join(directory,'source.json');
+ const source=sample();source.users[0].id='another-source';source.identities[0].user_id='another-source';source.profiles[0].id='another-source';
+ for(const kind of ['courses','tasks','events','books'])source[kind].forEach(x=>x.user_id='another-source');
+ await writeFile(file,JSON.stringify(source));
+ const result=run(file,'--apply');assert.notEqual(result.status,0);assert.match(result.stderr,/Email already belongs/);
+ await assert.rejects(auth.getUser('another-source'),{code:'auth/user-not-found'});
+});

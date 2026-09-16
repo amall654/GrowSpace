@@ -1,0 +1,524 @@
+[
+  {
+    "id": "FR-AUTH-001",
+    "need": "N01",
+    "uc": "UC01",
+    "tc": "TC01",
+    "source": "S01، S03",
+    "decision": "D07",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-002",
+    "need": "N01",
+    "uc": "UC01",
+    "tc": "TC01",
+    "source": "S01، S03",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-003",
+    "need": "N01",
+    "uc": "UC02",
+    "tc": "TC02",
+    "source": "S01، S03",
+    "decision": "D07",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-004",
+    "need": "N01",
+    "uc": "UC03",
+    "tc": "TC03",
+    "source": "S01، S03",
+    "decision": "D07",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-005",
+    "need": "N01",
+    "uc": "UC03",
+    "tc": "TC03",
+    "source": "S01، S03",
+    "decision": "D07",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-006",
+    "need": "N01",
+    "uc": "مشترك للحساب",
+    "tc": "TC04",
+    "source": "S01، S03",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-AUTH-007",
+    "need": "N01",
+    "uc": "مشترك للحساب",
+    "tc": "TC04",
+    "source": "S01، S03",
+    "decision": "D04",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-PRO-001",
+    "need": "N02",
+    "uc": "UC04",
+    "tc": "TC05",
+    "source": "S01، S04",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-PRO-002",
+    "need": "N02",
+    "uc": "UC04",
+    "tc": "TC05",
+    "source": "S01، S04",
+    "decision": "D01",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-CRS-001",
+    "need": "N03",
+    "uc": "UC05",
+    "tc": "TC06",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-CRS-002",
+    "need": "N03",
+    "uc": "UC05",
+    "tc": "TC06",
+    "source": "S01، S04، S05",
+    "decision": "D03",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-CRS-003",
+    "need": "N03",
+    "uc": "UC05",
+    "tc": "TC06، TC16",
+    "source": "S01، S04، S05",
+    "decision": "D03",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-TSK-001",
+    "need": "N03",
+    "uc": "UC06",
+    "tc": "TC07",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-TSK-002",
+    "need": "N03",
+    "uc": "UC06",
+    "tc": "TC07",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-TSK-003",
+    "need": "N03",
+    "uc": "UC06",
+    "tc": "TC08",
+    "source": "S01، S04، S05",
+    "decision": "D01",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-TSK-004",
+    "need": "N03",
+    "uc": "UC06",
+    "tc": "TC07",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-TSK-005",
+    "need": "N03",
+    "uc": "UC06",
+    "tc": "TC07",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-SCH-001",
+    "need": "N04",
+    "uc": "UC07",
+    "tc": "TC09",
+    "source": "S01، S04، S05",
+    "decision": "D02",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-SCH-002",
+    "need": "N04",
+    "uc": "UC07",
+    "tc": "TC09",
+    "source": "S01، S04، S05",
+    "decision": "D02",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-SCH-003",
+    "need": "N04",
+    "uc": "UC07",
+    "tc": "TC09",
+    "source": "S01، S04، S05",
+    "decision": "D02",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-SCH-004",
+    "need": "N04",
+    "uc": "UC07",
+    "tc": "TC09",
+    "source": "S01، S04، S05",
+    "decision": "D02",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DASH-001",
+    "need": "N05",
+    "uc": "UC08",
+    "tc": "TC10",
+    "source": "S01، S04",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DASH-002",
+    "need": "N05",
+    "uc": "UC08",
+    "tc": "TC08",
+    "source": "S01، S04",
+    "decision": "D01",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DASH-003",
+    "need": "N05",
+    "uc": "UC08",
+    "tc": "TC10",
+    "source": "S01، S04",
+    "decision": "D02",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-REM-001",
+    "need": "N05",
+    "uc": "UC08",
+    "tc": "TC11",
+    "source": "S01، S04",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-REM-002",
+    "need": "N05",
+    "uc": "UC08",
+    "tc": "TC11",
+    "source": "S01، S04",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-FOC-001",
+    "need": "N06",
+    "uc": "UC09",
+    "tc": "TC12",
+    "source": "S01، S04",
+    "decision": "",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-FOC-002",
+    "need": "N06",
+    "uc": "UC09",
+    "tc": "TC12",
+    "source": "S01، S04",
+    "decision": "D06",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-LIB-001",
+    "need": "N07",
+    "uc": "UC10",
+    "tc": "TC13",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-LIB-002",
+    "need": "N07",
+    "uc": "UC10",
+    "tc": "TC13",
+    "source": "S01، S04، S05",
+    "decision": "D05",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-LIB-003",
+    "need": "N07",
+    "uc": "UC10",
+    "tc": "TC13",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-LIB-004",
+    "need": "N07",
+    "uc": "UC10",
+    "tc": "TC13",
+    "source": "S01، S04، S05",
+    "decision": "",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-LNG-001",
+    "need": "N08",
+    "uc": "UC11",
+    "tc": "TC14، TC15",
+    "source": "S01، S06",
+    "decision": "S12",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-LNG-002",
+    "need": "N08",
+    "uc": "UC11",
+    "tc": "TC14",
+    "source": "S01، S06",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DEM-001",
+    "need": "N09",
+    "uc": "UC12",
+    "tc": "TC15",
+    "source": "S12، S13",
+    "decision": "D06",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-DEM-002",
+    "need": "N09",
+    "uc": "UC12",
+    "tc": "TC15",
+    "source": "S12، S13",
+    "decision": "D06",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-DEM-003",
+    "need": "N09",
+    "uc": "UC12",
+    "tc": "TC15",
+    "source": "S12، S13",
+    "decision": "D06",
+    "priority": "P2"
+  },
+  {
+    "id": "FR-DAT-001",
+    "need": "N10",
+    "uc": "UC04 إلى UC08، UC10",
+    "tc": "TC16",
+    "source": "S01، S04، S05",
+    "decision": "D04",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DAT-002",
+    "need": "N10",
+    "uc": "UC04 إلى UC08، UC10",
+    "tc": "TC16",
+    "source": "S01، S04، S05",
+    "decision": "D04",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DAT-003",
+    "need": "N10",
+    "uc": "UC04 إلى UC08، UC10",
+    "tc": "TC16",
+    "source": "S01، S04، S05",
+    "decision": "D04",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DAT-004",
+    "need": "N10",
+    "uc": "UC04 إلى UC08، UC10",
+    "tc": "TC04، TC23",
+    "source": "S01، S04، S05",
+    "decision": "D04؛ S11",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-DAT-005",
+    "need": "N10",
+    "uc": "UC04 إلى UC08، UC10",
+    "tc": "TC16، TC23",
+    "source": "S01، S04، S05",
+    "decision": "D04؛ S11",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-MIG-001",
+    "need": "N10",
+    "uc": "انتقال تشغيلي",
+    "tc": "TC24",
+    "source": "S14، S16",
+    "decision": "D09",
+    "priority": "P1"
+  },
+  {
+    "id": "FR-MIG-002",
+    "need": "N10",
+    "uc": "انتقال تشغيلي",
+    "tc": "TC24",
+    "source": "S14، S16",
+    "decision": "D09",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-SEC-001",
+    "need": "N10",
+    "uc": "غير وظيفي",
+    "tc": "TC17",
+    "source": "S01، S05، S09",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-SEC-002",
+    "need": "N10",
+    "uc": "غير وظيفي",
+    "tc": "TC18",
+    "source": "S01، S07",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-SEC-003",
+    "need": "N10",
+    "uc": "غير وظيفي",
+    "tc": "TC18",
+    "source": "S01",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-REL-001",
+    "need": "N10",
+    "uc": "غير وظيفي",
+    "tc": "TC16",
+    "source": "S01، S04",
+    "decision": "D04",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-PER-001",
+    "need": "N08",
+    "uc": "غير وظيفي",
+    "tc": "TC19",
+    "source": "S01",
+    "decision": "D08",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-PER-002",
+    "need": "N08",
+    "uc": "غير وظيفي",
+    "tc": "TC19",
+    "source": "S01",
+    "decision": "D08",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-USA-001",
+    "need": "N08",
+    "uc": "غير وظيفي",
+    "tc": "TC20",
+    "source": "S01",
+    "decision": "D08",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-COM-001",
+    "need": "N08",
+    "uc": "غير وظيفي",
+    "tc": "TC21",
+    "source": "S01",
+    "decision": "D08",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-MNT-001",
+    "need": "N08",
+    "uc": "غير وظيفي",
+    "tc": "TC22",
+    "source": "S02، S07",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "NFR-PRI-001",
+    "need": "N10",
+    "uc": "غير وظيفي",
+    "tc": "TC18",
+    "source": "S01، S08",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "IF-001",
+    "need": "N08",
+    "uc": "UC11",
+    "tc": "TC14",
+    "source": "S06، S07",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "IF-002",
+    "need": "N10",
+    "uc": "مشترك للحساب",
+    "tc": "TC16، TC17",
+    "source": "S04، S05، S07",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "IF-003",
+    "need": "N01",
+    "uc": "UC02",
+    "tc": "TC02",
+    "source": "S03، S08",
+    "decision": "",
+    "priority": "P1"
+  },
+  {
+    "id": "IF-004",
+    "need": "N09، N10",
+    "uc": "UC12؛ مشترك للحساب",
+    "tc": "TC15، TC23",
+    "source": "S11، S12، S13",
+    "decision": "",
+    "priority": "P1"
+  }
+]

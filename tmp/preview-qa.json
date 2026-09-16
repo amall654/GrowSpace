@@ -1,0 +1,22 @@
+{
+  "routes": [
+    "/preview/",
+    "/demo/"
+  ],
+  "languages": [
+    "ar",
+    "en"
+  ],
+  "widths": [
+    360,
+    1440
+  ],
+  "sections": 6,
+  "forms": 0,
+  "storageCalls": 0,
+  "externalRequests": 0,
+  "writeRequests": 0,
+  "pageErrors": 0,
+  "filters": "6 total / 2 completed",
+  "reload": "fixed examples; view state reset"
+}
