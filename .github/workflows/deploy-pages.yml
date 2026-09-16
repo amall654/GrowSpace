@@ -1,10 +1,10 @@
-name: Deploy GrowSpace to GitHub Pages
+name: Redirect legacy GrowSpace links to Firebase
 
 on:
   push:
     branches: [main]
     paths:
-      - "Website/**"
+      - "Website/legacy-redirect.html"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
@@ -24,42 +24,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: pnpm
-          cache-dependency-path: Website/pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: Website
-
-      - name: Build static site
-        run: pnpm build
-        working-directory: Website
-        env:
-          GITHUB_ACTIONS: "true"
+      - name: Prepare legacy redirects
+        run: |
+          mkdir -p legacy
+          cp Website/legacy-redirect.html legacy/index.html
+          cp Website/legacy-redirect.html legacy/404.html
+          for route in login auth dashboard demo preview forgot-password reset-password privacy terms; do
+            mkdir -p "legacy/$route"
+            cp Website/legacy-redirect.html "legacy/$route/index.html"
+          done
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./Website/out
+          path: ./legacy
 
   deploy:
-    # Enable only after the Firebase production readiness checks in MIGRATION.md.
-    if: vars.FIREBASE_MIGRATION_READY == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy legacy redirects
         id: deployment
         uses: actions/deploy-pages@v4
