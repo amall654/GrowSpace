@@ -17,8 +17,7 @@ export default function ResetPasswordPage() {
   const logoSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/brand/growspace-logo.png`;
 
   useEffect(() => {
-    const savedLanguage = sessionStorage.getItem("growspace-language");
-    setIsArabic(savedLanguage !== "en");
+    try { setIsArabic(sessionStorage.getItem("growspace-language") !== "en"); } catch {}
     const service=getFirebase();
     const code=new URLSearchParams(window.location.search).get("oobCode");
     if(!service || !code){setChecking(false);return;}
