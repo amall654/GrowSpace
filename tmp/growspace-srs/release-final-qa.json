@@ -1,0 +1,15 @@
+{
+  "version": "0.12",
+  "pages": 36,
+  "requirements_in_docx_and_pdf": 64,
+  "use_cases": 14,
+  "acceptance_scenarios": 29,
+  "diagrams": 3,
+  "render": "Native Word export; Poppler page renders",
+  "visual_review": "All 37 initial pages reviewed; final changed pages 2,3,24,29,35,36 inspected; other final page bodies pixel-identical to inspected render, verified by hashes",
+  "approval": "Review draft; AI proposed and unimplemented; detailed decisions remain open",
+  "files": {
+    "GrowSpace_SRS_AR.docx": "112c736ded79ad20e4b25b3c1e7a6d4927229f28ef12ce77fe76bf42d17f2085",
+    "GrowSpace_SRS_AR.pdf": "665de5ce6c601a06f4646c23c0817a505f23483c241edf0d99d6b24e7eb92552"
+  }
+}
